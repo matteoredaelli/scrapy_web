@@ -40,6 +40,7 @@ class CapComuniItalianiSpider(scrapy.Spider):
     
     def parse_city(self, response):
         record = {}
+        record['comune'] = response.xpath('//h1/text()').extract_first().replace("Comune di ","")
         for row in response.xpath('//tr'):
             if row.xpath('td[@class="ivoce"]'):
                 field = row.xpath('td[@class="ivoce"]//text()').extract_first()
