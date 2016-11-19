@@ -31,16 +31,6 @@ class NomiMaschiliFemminiliNomixItSpider(scrapy.Spider):
     )
 
     def parse(self, response):
-        for url in response.xpath('//ul[@id="general-index"]//li/a/@href').extract():
-            yield scrapy.Request(url, callback=self.parse_word)
-            
-            # extracting next pages
-            for next_page in response.xpath('//h2/a/@href').extract():
-                if next_page is not None and next_page != "#":
-                    next_page = response.urljoin(next_page)
-                    yield scrapy.Request(next_page, callback=self.parse)
-    
-    def parse_word(self, response):
         for nome in response.xpath('//div[@class="pure-g"]/div[1]/table//td/text()').extract():
             yield {"word": nome,
                    "class": "nome proprio",
@@ -51,3 +41,10 @@ class NomiMaschiliFemminiliNomixItSpider(scrapy.Spider):
                    "class": "nome proprio",
                    "sex": "female",
                    "source": "nomix.com"}
+            
+        # extracting next pages
+        for next_page in response.xpath('//h2/a/@href').extract():
+            if next_page is not None and next_page != "#":
+                    next_page = response.urljoin(next_page)
+                    yield scrapy.Request(next_page, callback=self.parse)
+    
