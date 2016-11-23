@@ -25,9 +25,17 @@ import re
 class MondadoriStore(scrapy.Spider):
     name = "mondadoristore"
     allowed_domains = ["mondadoristore.it"]
-    start_urls = ['http://www.mondadoristore.it/Libri-novita-e-ultime-uscite/gr-3920/']
+    start_urls = ['http://www.mondadoristore.it/libri/italiani/']
 
     def parse(self, response):
+            # extracting next pages
+            next_pages = response.xpath('//a/@href').extract()
+            for next_page in filter(lambda x:re.search(r'/libri/italiani/.+/gen.*/', x), next_pages):
+                if next_page is not None and next_page != "#":
+                    next_page = response.urljoin(next_page)
+                    yield scrapy.Request(next_page, callback=self.parse_books)
+                    
+    def parse_books(self, response):
         for entry in response.xpath('//div[@class="single-box product no-border"]'):
             id = entry.xpath('./a/@eancode').extract_first()
             title = entry.xpath('.//h3/a/@title').extract_first()
@@ -49,6 +57,6 @@ class MondadoriStore(scrapy.Spider):
             for next_page in response.xpath('//a[@rel="next"]/@href').extract():
                 if next_page is not None and next_page != "#":
                     next_page = response.urljoin(next_page)
-                    yield scrapy.Request(next_page, callback=self.parse)
+                    yield scrapy.Request(next_page, callback=self.parse_books)
 
 
