@@ -30,7 +30,7 @@ def clean_text(text):
 class MikonaSK(scrapy.Spider):
     name = "mikona.sk"
     allowed_domains = ["mikona.sk"]
-    start_urls = ['http://www.mikona.sk/e-shop/pneumatiky']
+    start_urls = ['http://www.mikona.sk/e-shop/pneumatiky/']
 
     def parse(self, response):
         for entry in response.xpath('//li[@itemtype="http://schema.org/Offer"]'):
@@ -44,8 +44,8 @@ class MikonaSK(scrapy.Spider):
             #yield request
             yield scrapy.Request(url, callback=self.parse_tyre, meta={'mydata': mydata})
 
-        #next_page = response.xpath('//a[@class="paging__arrow paging__arrow--right"]/@href').extract_first()
-        #scrapy.Request(next_page, callback=self.parse)
+        next_page = response.xpath('//a[@class="paging__arrow paging__arrow--right"]/@href').extract_first()
+        yield scrapy.Request(next_page, callback=self.parse)
 
         
     def parse_tyre(self, response):
