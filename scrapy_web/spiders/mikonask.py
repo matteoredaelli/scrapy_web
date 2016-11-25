@@ -35,15 +35,17 @@ class MikonaSK(scrapy.Spider):
     def parse(self, response):
         for entry in response.xpath('//li[@itemtype="http://schema.org/Offer"]'):
             description = entry.xpath('.//h2/a/@title').extract_first()
+            price = entry.xpath('//span[@class="cenasdph"]/text()').extract_first()
             url = entry.xpath('.//h2/a/@href').extract_first()
-            mydata = {"description": clean_text(description)}
+            mydata = {"description": clean_text(description),
+                          "price": clean_text(price)}
             #request = scrapy.Request(url, callback=self.parse_tyre)
             #request.meta['mydata'] = mydata
             #yield request
             yield scrapy.Request(url, callback=self.parse_tyre, meta={'mydata': mydata})
 
-        next_page = response.xpath('//a[@class="paging__arrow paging__arrow--right"]/@href').extract_first()
-        scrapy.Request(next_page, callback=self.parse)
+        #next_page = response.xpath('//a[@class="paging__arrow paging__arrow--right"]/@href').extract_first()
+        #scrapy.Request(next_page, callback=self.parse)
 
         
     def parse_tyre(self, response):
