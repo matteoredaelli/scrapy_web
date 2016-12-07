@@ -17,6 +17,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+# scrapy crawl autoparti.it -a width=195 -a height=65 -a diameter=15
+
 import scrapy
 import datetime, re
 
@@ -29,8 +31,12 @@ def clean_text(text):
     
 class AutopartiIt(scrapy.Spider):
     name = "autoparti.it"
-    allowed_domains = ["autoparti.it"]
-    start_urls = ['http://www.autoparti.it/pneumatici/%d-pollici?page=1' % n for n in [14,15,16,17,18]]
+
+    def __init__(self, width="195", height="65", diameter="15", *args, **kwargs):
+        super(AutopartiIt, self).__init__(*args, **kwargs)
+        self.allowed_domains = ["autoparti.it"]
+        self.start_urls = ["http://www.autoparti.it/pneumatici?Width=%s&CrossSections=%s&Size=%s&Season=&page=1" % (width, height, diameter)]
+        #self.start_urls = ['http://www.autoparti.it/pneumatici/%d-pollici?page=1' % n for n in [14,15,16,17,18]]
 
     def parse(self, response):
         ts = datetime.datetime.now()
@@ -40,7 +46,7 @@ class AutopartiIt(scrapy.Spider):
             ean = entry.xpath('.//div[@class="nr"]/span[1]/text()').extract_first()#.replace("EAN: ","")
             id  = entry.xpath('.//div[@class="nr"]/span[2]/text()').extract_first()#.replace("MPN: ","")
             picture_url = entry.xpath('.//img[@class="tires_item_image"]/@src').extract_first()
-            prod_url = entry.xpath('.//a[@class="prod_link"]/@href').extract_first()
+            product_url = entry.xpath('.//a[@class="prod_link"]/@href').extract_first()
             price = entry.xpath('.//span[@class="new_pr"]/text()').extract_first()
             season = entry.xpath('.//div[contains(@class, "tires_season")]/@class').extract_first()#.replace("tires_season ","")
             yield {"id": id,
