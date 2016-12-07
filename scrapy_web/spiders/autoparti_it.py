@@ -41,7 +41,7 @@ class AutopartiIt(scrapy.Spider):
     def parse(self, response):
         ts = datetime.datetime.now()
         for entry in response.xpath('//div[@class="tires_listing"]/div[@class="item"]'):
-            model = entry.xpath('//a[@class="prod_link"]/text()').extract_first()
+            model = entry.xpath('.//a[@class="prod_link"]/text()').extract_first()
             description = entry.xpath('.//span[@class="nam_model"]/text()').extract_first()
             ean = entry.xpath('.//div[@class="nr"]/span[1]/text()').extract_first()#.replace("EAN: ","")
             id  = entry.xpath('.//div[@class="nr"]/span[2]/text()').extract_first()#.replace("MPN: ","")
@@ -54,7 +54,7 @@ class AutopartiIt(scrapy.Spider):
                        "ean": ean,
                        "model": model,
                        "picture_url": picture_url,
-                       "prod_url": prod_url,
+                       "product_url": product_url,
                        "price": price,
                        "season": season,
                        "source": "autoparti.it",
