@@ -25,7 +25,7 @@ import datetime, re
 class GommadirettoIt(scrapy.Spider):
     name = "gommadiretto.it"
     
-    def __init__(self, weight="195", height="65", diameter="15", *args, **kwargs):
+    def __init__(self, width="195", height="65", diameter="15", *args, **kwargs):
         super(GommadirettoIt, self).__init__(*args, **kwargs)
         self.allowed_domains = ["gommadiretto.it"]
         self.start_urls = ['http://www.gommadiretto.it/cgi-bin/rshop.pl?s_p=&rsmFahrzeugart=PKW&s_p_=Tutti&dsco=130&tyre_for=&search_tool=&ist_hybris_orig=&with_bootstrap_flag=1&suchen=--Mostrare+tutti+gli+pneumatici--&m_s=3&x_tyre_for=&cart_id=88618236.130.22966&sowigan=&Breite=%s&Quer=%s&Felge=%s&Speed=&Load=&Marke=&kategorie=&filter_preis_von=&filter_preis_bis=&homologation=&Ang_pro_Seite=50' % (width, height, diameter) ]
@@ -44,7 +44,7 @@ class GommadirettoIt(scrapy.Spider):
             mydata =  {
                 "brand": brand,
                 "product_url": url,
-                #"description": description,
+                "description": description,
                 "id": id,
                 "price": price1 + price2,
                 "season": season,
