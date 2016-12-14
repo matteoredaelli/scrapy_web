@@ -35,8 +35,8 @@ class AutoDocIt(scrapy.Spider):
         for entry in response.xpath('//li[@class="ovVisLi"]'):
             id = entry.xpath('.//div[@class="description"]//span[@style="font-size: 12px;"]/text()').extract_first()
             ean = entry.xpath('.//span[@class="article_number"]/text()').extract_first()
-            model = entry.xpath('./div[@class="name"]/a/text()').extract_first()
-            description = entry.xpath('./div[@class="nr"]/text()').extract_first()
+            model = entry.xpath('.//div[@class="name"]/a/text()').extract_first()
+            description = entry.xpath('.//div[@class="nr"]/text()').extract_first()
             price = entry.xpath('.//p[@class="actual_price"]/text()').extract_first()
             picture_url = entry.xpath('.//img[@class="tires_item_image "]/@src').extract_first()
             product_url = entry.xpath('.//div[@class="image"]/a/@href').extract_first()
