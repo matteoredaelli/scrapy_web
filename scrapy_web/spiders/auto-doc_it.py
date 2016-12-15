@@ -28,7 +28,7 @@ class AutoDocIt(scrapy.Spider):
     def __init__(self, width="195", height="65", diameter="15", *args, **kwargs):
         super(AutoDocIt, self).__init__(*args, **kwargs)
         self.allowed_domains = ["auto-doc.it"]
-        # self.start_urls = ['http://www.auto-doc.it/pneumatici?Width=%s&CrossSections=%s&Size=%s&Season=&page=1' % (width, height, diameter)]
+        #self.start_urls = ['http://www.auto-doc.it/pneumatici?Width=%s&CrossSections=%s&Size=%s&Season=&page=1' % (width, height, diameter)]
         self.start_urls = ['http://www.auto-doc.it/pneumatici/%d-pollici?page=1' % n for n in [10,12,13,14,15,16,17,18,19,20,21,22,23,24,40,365,390,415]]
     def parse(self, response):
         ts = datetime.datetime.now()
