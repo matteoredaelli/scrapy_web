@@ -28,8 +28,8 @@ class AutoDocIt(scrapy.Spider):
     def __init__(self, width="195", height="65", diameter="15", *args, **kwargs):
         super(AutoDocIt, self).__init__(*args, **kwargs)
         self.allowed_domains = ["auto-doc.it"]
-        self.start_urls = ['http://www.auto-doc.it/pneumatici?Width=%s&CrossSections=%s&Size=%s&Season=&page=1' % (width, height, diameter)]
-
+        # self.start_urls = ['http://www.auto-doc.it/pneumatici?Width=%s&CrossSections=%s&Size=%s&Season=&page=1' % (width, height, diameter)]
+        self.start_urls = ['http://www.auto-doc.it/pneumatici/%d-pollici?page=1' % n for n in [10,12,13,14,15,16,17,18,19,20,21,22,23,24,40,365,390,415]]
     def parse(self, response):
         ts = datetime.datetime.now()
         for entry in response.xpath('//li[@class="ovVisLi"]'):
@@ -46,6 +46,7 @@ class AutoDocIt(scrapy.Spider):
                 "ean": ean,
                 "id": id,
                 "price": price,
+                "model": model,
                 #"season": season,
                 #"size": size,
                 "source": "auto-doc.it",
@@ -53,7 +54,9 @@ class AutoDocIt(scrapy.Spider):
                 "product_url": product_url,
                 "ts": ts
             }
-            keys = entry.xpath('.//div[@class="description"]//div[@class="box"]//ul/li/span[@class="lc"]/text()').extract()    
+            keys = entry.xpath('.//div[@class="description"]//div[@class="box"]//ul/li/span[@class="lc"]/text()').extract()
+            ## removing : at the end
+            keys = map(lambda x: x.replace(":",""), keys)
             values = entry.xpath('.//div[@class="description"]//div[@class="box"]//ul/li/span[@class="rc"]/text()').extract()
             details2 = zip(keys, values)
             details.update(details2)

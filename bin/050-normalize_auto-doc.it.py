@@ -38,8 +38,8 @@ spark = SparkSession \
   .enableHiveSupport() \
   .getOrCreate()
 
-regexp_model = "^(\w+) (.+) (\w+/\w+ R\w+)"
-regexp_size = "(\w+/\w+ R\w+ \w+\w+)\s*"
+regexp_model = "^(\w+) (.+)"
+regexp_size = "(\w+/\w+ R?\w+ \w+\w+)\s*"
 
 records = spark.read.json(input)
 
@@ -48,16 +48,19 @@ records.filter(records.id.isNotNull()) \
   .filter(regexp_extract('description', '(rinnovati)', 1) == '') \
   .withColumn("size",        regexp_extract("description", regexp_size, 1)) \
   .withColumn("brand",       regexp_extract("model", regexp_model, 1)) \
-  .withColumn("season",      trim(regexp_replace("season", "tires_season",""))) \
+  .withColumn("model",       regexp_extract("model", regexp_model, 2)) \
+  .withColumn("season",      trim(regexp_replace("Stagione:", "Pneumatici invernali","winter"))) \
+  .withColumn("season",      trim(regexp_replace("season", "Pneumatici estivi","summer"))) \
+  .withColumn("season",      trim(regexp_replace("season", "Pneumatici quattro stagioni","all seasons"))) \
   .withColumn("id",          trim(regexp_replace("id", "MPN: ",""))) \
   .withColumn("ean",         trim(regexp_replace("ean", "EAN: ",""))) \
-  .withColumn("runflat",     regexp_extract("description", "(runflat)", 1)) \
+  .withColumnRenamed("Pneumatici Runflat:", "runflat") \
+  .withColumnRenamed("Pneumatici chiodati:", "chiodabile") \
   .withColumn("mfs",         regexp_extract("description", "(MFS|FSL|bordo di protezione|bordino di protezione)", 1)) \
   .withColumn("xl",          regexp_extract("description", " (XL|RF)\s*", 1)) \
-  .withColumn("chiodabile",  regexp_extract("description", "(chiodabile)\s*", 1)) \
-  .withColumn("price",       regexp_replace("price", "\u00a0\u20ac", "")) \
+  .withColumn("price",       regexp_replace("price", " €", "")) \
   .withColumn("price",       regexp_replace("price", ",", ".")) \
-  .withColumn("model",       regexp_extract("model", regexp_model, 2)) \
+
   .withColumn('country',     lit("IT")) \
   .withColumn('currency',    lit("EUR")) \
   .write.json(output)

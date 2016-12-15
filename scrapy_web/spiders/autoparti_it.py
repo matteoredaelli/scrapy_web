@@ -35,8 +35,8 @@ class AutopartiIt(scrapy.Spider):
     def __init__(self, width="195", height="65", diameter="15", *args, **kwargs):
         super(AutopartiIt, self).__init__(*args, **kwargs)
         self.allowed_domains = ["autoparti.it"]
-        self.start_urls = ["http://www.autoparti.it/pneumatici?Width=%s&CrossSections=%s&Size=%s&Season=&page=1" % (width, height, diameter)]
-        #self.start_urls = ['http://www.autoparti.it/pneumatici/%d-pollici?page=1' % n for n in [14,15,16,17,18]]
+        #self.start_urls = ["http://www.autoparti.it/pneumatici?Width=%s&CrossSections=%s&Size=%s&Season=&page=1" % (width, height, diameter)]
+        self.start_urls = ['http://www.autoparti.it/pneumatici/%d-pollici?page=1' % n for n in [10,12,13,14,15,16,17,18,19,20,21,22,23,24,40,365,390,415]]
 
     def parse(self, response):
         ts = datetime.datetime.now()
