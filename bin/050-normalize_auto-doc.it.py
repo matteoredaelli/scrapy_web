@@ -49,9 +49,9 @@ records.filter(records.id.isNotNull()) \
   .withColumn("size",        regexp_extract("description", regexp_size, 1)) \
   .withColumn("brand",       regexp_extract("model", regexp_model, 1)) \
   .withColumn("model",       regexp_extract("model", regexp_model, 2)) \
-  .withColumn("season",      trim(regexp_replace("Stagione", "Pneumatici invernali","winter"))) \
-  .withColumn("season",      trim(regexp_replace("season",   "Pneumatici estivi","summer"))) \
-  .withColumn("season",      trim(regexp_replace("season",   "Pneumatici quattro stagioni","all_seasons"))) \
+  .withColumn("season",      trim(regexp_replace("Stagione", "Pneumatici invernali",        "winter"))) \
+  .withColumn("season",      trim(regexp_replace("season",   "Pneumatici estivi",           "summer"))) \
+  .withColumn("season",      trim(regexp_replace("season",   "Pneumatici quattro stagioni", "all_seasons"))) \
   .withColumn("id",          trim(regexp_replace("id",       "MPN: ",""))) \
   .withColumn("ean",         trim(regexp_replace("ean",      "EAN: ",""))) \
   .withColumnRenamed("Pneumatici Runflat:",  "runflat") \

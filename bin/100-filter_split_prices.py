@@ -27,6 +27,7 @@ if len(sys.argv) != 3:
 # Grab the input and output
 input = sys.argv[1]
 output = sys.argv[2]
+date = sys.argv[3]
 
 # warehouse_location points to the default location for managed databases and tables
 warehouse_location = 'spark-warehouse'
@@ -40,6 +41,11 @@ spark = SparkSession \
 
 r = spark.read.json(input)
 
+r = r.withColumn("ts", lit(date)) \
+  .distinct() \
+  .dropDuplicates(["brand", "id"]) \
+  .write.json(output)
+  
 r.select("brand", "model").distinct().write.json(output + "/fact_brand_model")
 for c in ["brand", "size", "season"]:
     r.select(c).distinct().write.json(output + "/fact_%s" % c)
@@ -49,9 +55,9 @@ price_cols = ['country', 'currency', 'id', 'price', 'source', 'ts']
 product_cols = list(set(r.columns) - set(price_cols)) + ['id', 'source', 'ts']
 
 source = r.first().source
-ts = r.first().ts
+ts = date
 
-regexp_ts = "^(\d\d\d\\d)-(\d\d)-(\d\d)"
+regexp_ts = "^(\d\d\d\\d).(\d\d).(\d\d)"
 year  = re.search(regexp_ts, ts).group(1)
 month = re.search(regexp_ts, ts).group(2)
 day   = re.search(regexp_ts, ts).group(3)

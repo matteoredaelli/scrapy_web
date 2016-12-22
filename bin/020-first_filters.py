@@ -42,7 +42,7 @@ r = spark.read.json(input)
 
 r = r.withColumn("ts", lit(date)) \
   .distinct() \
-  .dropDuplicates(["id"]) \
+  .dropDuplicates(["brand", "id"]) \
   .write.json(output)
 
   

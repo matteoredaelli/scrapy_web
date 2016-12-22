@@ -170,9 +170,9 @@ for (w,h,d) in [
     (265,70,16)]:
 	       for spider in ["gommadiretto.it"]:
 			     cmd = cmd_scrapy % (spider, today, spider)
-#			     os.system(cmd + " -a width=%d -a height=%d -a diameter=%d" % (w,h,d) )
+			     os.system(cmd + " -a width=%d -a height=%d -a diameter=%d" % (w,h,d) )
 	       
 
-for spider in ["auto-doc.it"]: # "autoparti.it"]: #, "mikona.sk"]:
+for spider in ["auto-doc.it", "autoparti.it", "mikona.sk"]:
     cmd = cmd_scrapy % (spider, today, spider)
     os.system(cmd)
