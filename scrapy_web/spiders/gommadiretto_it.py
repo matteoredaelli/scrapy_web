@@ -17,7 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # usage:
-#   scrapy crawl lafeltrinelli -t jsonlines -o data/a.json
+#   scrapy crawl gommadiretto.it -t jsonlines -o data/a.json
 
 import scrapy
 import datetime, re
@@ -28,7 +28,7 @@ class GommadirettoIt(scrapy.Spider):
     def __init__(self, width="195", height="65", diameter="15", *args, **kwargs):
         super(GommadirettoIt, self).__init__(*args, **kwargs)
         self.allowed_domains = ["gommadiretto.it"]
-        self.start_urls = ['http://www.gommadiretto.it/cgi-bin/rshop.pl?s_p=&rsmFahrzeugart=PKW&s_p_=Tutti&dsco=130&tyre_for=&search_tool=&ist_hybris_orig=&with_bootstrap_flag=1&suchen=--Mostrare+tutti+gli+pneumatici--&m_s=3&x_tyre_for=&cart_id=88618236.130.22966&sowigan=&Breite=%s&Quer=%s&Felge=%s&Speed=&Load=&Marke=&kategorie=&filter_preis_von=&filter_preis_bis=&homologation=&Ang_pro_Seite=50' % (width, height, diameter) ]
+        self.start_urls = ['http://www.gommadiretto.it/cgi-bin/rshop.pl?s_p=&rsmFahrzeugart=PKW&s_p_=Tutti&dsco=130&tyre_for=&search_tool=&ist_hybris_orig=&with_bootstrap_flag=1&suchen=--Mostrare+tutti+gli+pneumatici--&m_s=3&x_tyre_for=&cart_id=88618236.130.22966&sowigan=&Breite=%s&Quer=%s&Felge=%s&Speed=&Load=&Marke=&kategorie=&filter_preis_von=&filter_preis_bis=&homologation=&Ang_pro_Seite=50&weiter=0' % (width, height, diameter) ]
         
     def parse(self, response):
         ts = datetime.datetime.now()
@@ -60,11 +60,11 @@ class GommadirettoIt(scrapy.Spider):
 
     def parse_tyre(self, response):
         ean = response.xpath('//div[@id="pdp_tb_info_ean"]//div[@class="pdp_tabC"]/text()').extract_first()
-        #description2 = "\n".join(response.xpath('//div[@id="reifendetails_tabs-0"]//text()').extract())
+        #description = "\n".join(response.xpath('//div[@id="reifendetails_tabs-0"]//text()').extract())
         mydata = response.meta['mydata']
         picture_url = response.xpath('//img[@id="zoom-reifenbild"]/@src').extract_first()
         mydata['ean'] = ean
-        #mydata['description2'] = description
+        #mydata['description'] = description
         mydata['picture_url'] = response.urljoin(picture_url)
 
         yield mydata
