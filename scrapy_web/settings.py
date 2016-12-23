@@ -87,3 +87,6 @@ DOWNLOAD_DELAY=0.25
 #HTTPCACHE_DIR='httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES=[]
 #HTTPCACHE_STORAGE='scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+# matteo
+FEED_EXPORT_ENCODING = "utf-8"
