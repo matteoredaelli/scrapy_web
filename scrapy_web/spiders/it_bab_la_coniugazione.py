@@ -17,7 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# scrapy  crawl  -t jsonlines -o diz.json it.bab.la
+# scrapy  crawl  -t jsonlines -o verbi.json it.bab.la
 
 import scrapy
 
@@ -42,7 +42,9 @@ class itBabLaSpider(scrapy.Spider):
         verbo = response.xpath('//strong/text()').extract_first()
         for tempoxml in response.xpath('//div[@class="conj-tense-block"]'):
             tempo = tempoxml.xpath('./h3/text()').extract_first()
+            persone = tempoxml.xpath('.//div[@class="conj-item"]/div[@class="conj-person"]/text()').extract()
             coniugazione = tempoxml.xpath('.//div[@class="conj-item"]/div[@class="conj-result"]/text()').extract()
             yield {"verbo": verbo,
                        "tempo": tempo,
+                       "persone": persone,
                        "coniugazione": coniugazione}
