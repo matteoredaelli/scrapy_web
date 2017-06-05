@@ -40,12 +40,12 @@ class itBabLaSpider(scrapy.Spider):
                 
     def parse_verb(self, response):
         verbo = response.xpath('//strong/text()').extract_first()
-        coniugazioni = []
+        coniugazioni = {}
         for tempoxml in response.xpath('//div[@class="conj-tense-block"]'):
             tempo = tempoxml.xpath('./h3/text()').extract_first()
             persone = tempoxml.xpath('.//div[@class="conj-item"]/div[@class="conj-person"]/text()').extract()
             coniugazione = tempoxml.xpath('.//div[@class="conj-item"]/div[@class="conj-result"]/text()').extract()
-            coniugazioni.append({"tempo": tempo,
+            coniugazioni[tempo] = {
                         "persone": persone,
-                        "coniugazione": coniugazione})
+                        "coniugazione": coniugazione}
         yield {"verbo": verbo, "coniugazioni": coniugazioni}
